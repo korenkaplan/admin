@@ -1,0 +1,16 @@
+.imageContainer{
+}
+.container{
+  flex: 1;
+  flex-direction: row;
+  width: 100vh;
+  background-color: aquamarine;
+}
+.formContainer{
+  background-color: red;
+  width: 100px;
+}
+.image{
+  width: 100px;
+  height: 100px;
+}
