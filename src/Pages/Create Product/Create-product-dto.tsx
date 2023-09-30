@@ -15,7 +15,7 @@ export interface CreateProductForm {
     name: string;
     category: Category
     price:number;
-    imageFile:File
+    imageFile:string
     fabric:Fabric;
     gender:ClothingGender
     season:Season;

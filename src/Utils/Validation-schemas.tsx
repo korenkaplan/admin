@@ -7,7 +7,7 @@ export const CreateProductValidationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     category: Yup.string().required('Category is required'),
     price: Yup.number().required('Price is required'),
-    imageSource: Yup.string().required('Image source is required'),
+    imageFile: Yup.string().required('Image is required'),
     fabric: Yup.string().required('Fabric is required'),
     gender: Yup.string().required('Gender is required'),
     season: Yup.string().required('Season is required'),

@@ -1,11 +1,11 @@
   export enum Gender {
-    M = "male",
-    F = "female",
+    Male = "male",
+    Female = "female",
   }
   export enum ClothingGender {
-    M = "male",
-    F = "female",
-    U = "unisex"
+    Male = "male",
+    Female = "female",
+    Unisex = "unisex"
   }
   export enum Role {
     USER = "user",
