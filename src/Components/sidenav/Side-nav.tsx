@@ -23,7 +23,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { useAuth } from '@/Context/AuthContext';
 //#region Drawer Configurations
 const drawerWidth = 240;
 
@@ -102,6 +102,7 @@ interface Props {
 const MiniDrawer:FC<Props> =({header})=> {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const {logout} = useAuth();
  const navigate = useNavigate();
  const handleDrawerOpen = () => {
   setOpen(true);
@@ -225,7 +226,7 @@ const handleDrawerClose = () => {
             </ListItem>
           </div>
           <div>
-          <ListItem onClick={()=>{navigate('/')}} disablePadding sx={{ display: 'block' }}>
+          <ListItem onClick={logout} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,

@@ -30,7 +30,7 @@ const CreateProductPage: FC<Props> = () => {
     const [isLoading,setIsLoading] = useState(false);
     const [buttonTitle, setButtonTitle] = useState("Create Product");
     const initialValues = { name: '', price: 0, colors: [], season: Season.SpringSummer, gender: ClothingGender.Male, fabric: '', category: '' }
-    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ maxFiles: 1, accept: { 'image/png': ['.png'], 'image/jpeg': [], 'image/jpg': [], }, })
+    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ maxFiles: 1, accept: { 'image/png': ['.png'], 'image/jpeg': [], 'image/jpg': [], },maxSize:3 * 1024 * 1024 })
     const handleSubmit = async (values: CreateProductForm, { setSubmitting }) => {
         //TODO: add image to s3 and add item to collection
         if (acceptedFiles.length == 0) {
@@ -80,8 +80,11 @@ const CreateProductPage: FC<Props> = () => {
     }
     const dropzoneInitText = (
         <div className={classes.dropzoneInitText} >
-            <CloudUploadIcon sx={{ width: 40, height: 40, color: 'lightskyblue' }} />
-            <p>Drag 'n' drop an image here, or click to select an image</p>
+            <CloudUploadIcon sx={{ width: 80, height: 80, color: 'lightskyblue',marginRight:5 }} />
+            <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+                <h4>Drag and drop your image here</h4>
+                <p style={{color:'GrayText',fontSize:14}}>JPG,JPEG,PNG size no more than 3MB</p>
+            </div>
         </div>
     )
     const uploadFile = async (): Promise<string> => {
@@ -287,12 +290,11 @@ const useStyles = makeStyles(() =>
         },
         dropzoneInitText: {
             display: 'flex',
-            flexDirection: 'column',
             justifyContent: 'space-around',
             alignItems: 'center',
         },
         dropZoneDiv: {
-            border: '2px dashed lightblue',
+            border: '2px dashed lightgray',
             borderRadius: '20px',
             display: 'flex',
             justifyContent: 'center',
@@ -300,7 +302,7 @@ const useStyles = makeStyles(() =>
             textAlign: 'center',
             minHeight: '100px',
             cursor: 'pointer',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: 'white',
             outline: 'none',
             transition: 'border 0.24s ease-in-out',
 

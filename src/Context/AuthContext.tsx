@@ -5,6 +5,7 @@ interface AuthContextType {
   authenticated: boolean;
   setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   loginAttempt: (dto:LoginDto) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -14,15 +15,20 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [authenticated, setAuthenticated] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
   const loginAttempt = async (dto:LoginDto): Promise<void> => {
     console.log(dto);
     //TODO: Make api request to the server 
   }
+  const logout = ():void => {
+    setAuthenticated(false);
+     localStorage.removeItem('token');
+  }
   const values = {
     loginAttempt,
     authenticated,
-    setAuthenticated
+    setAuthenticated,
+    logout,
   }
 
   return (
