@@ -12,6 +12,8 @@ import {
 import { LoginValidationSchema } from '@/Utils/Validation-schemas';
 import {useAuth} from '@/Context/AuthContext'
 import { LoginDto } from './Login-Dto';
+import {toast} from 'react-toastify';
+
 interface Props {}
 interface MyFormValues {
   email: string;
@@ -33,6 +35,7 @@ const LoginPage: FC<Props> = () => {
       password: values.password
     }
     await loginAttempt(dto)
+    toast('login successful')
     setSubmitting(false);
   };
   const introDiv = (

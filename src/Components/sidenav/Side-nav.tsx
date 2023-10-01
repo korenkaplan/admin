@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React, { FC } from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -22,6 +22,8 @@ import {useNavigate} from 'react-router-dom';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import HomeIcon from '@mui/icons-material/Home';
+
 //#region Drawer Configurations
 const drawerWidth = 240;
 
@@ -94,10 +96,12 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 //#endregion
-export default function MiniDrawer() {
-  const header = 'Scan & Go Admin'
+interface Props {
+  header:string
+}
+const MiniDrawer:FC<Props> =({header})=> {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
  const navigate = useNavigate();
  const handleDrawerOpen = () => {
   setOpen(true);
@@ -124,8 +128,8 @@ const handleDrawerClose = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {header}
+          <Typography style={{display:'flex',alignItems:'center'}} variant="h6" noWrap component="div">
+            Scan & Go Admin {<HomeIcon sx={{marginLeft:2,marginRight:1}}/>}  / {header}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -247,3 +251,4 @@ const handleDrawerClose = () => {
     </Box>
   );
 }
+export default MiniDrawer

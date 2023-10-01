@@ -1,15 +1,16 @@
-import  { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import { useRest } from '@/Context/REST-Context';
-import { ITransaction, TransactionTableRow } from '@/Utils/Global-interfaces';
+import { IItem,  ItemTableRow } from '@/Utils/Global-interfaces';
 interface Props {
 }
 
 const TransactionsTable: FC<Props> = () => {
     const [rowsCount, setRowsCount] = useState<number>()
     const [maxPageNumber, setMaxPageNumber] = useState(0);
-    const [rows, setRows] = useState<TransactionTableRow[]>([])
+    const [rows, setRows] = useState<ItemTableRow[]>([])
+    const { GetItemsCount, GetItemsPagination } = useRest();
     const [isLoading, setIsLoading] = useState(false);
     const columns: GridColDef[] = [
         {
@@ -19,57 +20,67 @@ const TransactionsTable: FC<Props> = () => {
             width: 220,
         },
         {
-            field: 'userId',
-            headerName: 'User Id',
+            field: 'name',
+            headerName: 'Name',
             description: 'This column has a value getter and is not sortable.',
-            width: 220,
+            width: 160,
         },
         {
-            field: 'cardType',
-            headerName: 'Card Type',
+            field: 'category',
+            headerName: 'Category',
             description: 'This column has a value getter and is not sortable.',
-            width: 150,
+            width: 120,
+        },
+
+
+        {
+            field: 'fabric',
+            headerName: 'Fabric',
+            description: 'This column has a value getter and is not sortable.',
+            width: 120,
         },
         {
-            field: 'cardNumber',
-            headerName: 'Card Number',
+            field: 'gender',
+            headerName: 'Gender',
             description: 'This column has a value getter and is not sortable.',
-            width: 150,
+            width: 120,
         },
         {
-            field: 'totalAmount',
-            headerName: 'Total Amount',
+            field: 'season',
+            headerName: 'Season',
+            description: 'This column has a value getter and is not sortable.',
+            width: 120,
+        },
+        {
+            field: 'price',
+            headerName: 'Price',
             type: 'number',
             description: 'This column has a value getter and is not sortable.',
-            width: 110,
-        },
-        {
-            field: 'formattedDate',
-            headerName: 'Date',
-            description: 'This column has a value getter and is not sortable.',
-            width: 150,
+            width: 120,
         },
     ];
-    const { GetTransactionsAmount, GetTransactionsPagination } = useRest();
-    const modifyRows = (list: ITransaction[]): TransactionTableRow[] => {
-        const modifiedRows: TransactionTableRow[] = list.map((row) => {
+    const modifyRows = (list: IItem[]): ItemTableRow[] => {
+        const modifiedRows: ItemTableRow[] = list.map((row) => {
             return {
-                userId: row.userId,
                 id: row._id,
-                cardNumber: row.cardNumber,
-                cardType: row.cardType,
-                totalAmount: row.totalAmount,
-                formattedDate: row.formattedDate,
+                name: row.name,
+                price: row.price,
+                category: row.category,
+                fabric: row.fabric,
+                gender: row.gender,
+                season: row.season,
             };
         });
-        return modifiedRows
+        return modifiedRows;
     }
+
+
     const handlePaginationChange = async (params: { pageSize: number, page: number }) => {
         const { page } = params;
         if (page > maxPageNumber) {
             console.log('made api call');
             setIsLoading(true)
-            const  {list}  = await GetTransactionsPagination(page);
+            const { list } = await GetItemsPagination(page);
             const modifiedRows = modifyRows(list)
             const updatedList = [...rows, ...modifiedRows];
             setRows(updatedList)
@@ -77,21 +88,13 @@ const TransactionsTable: FC<Props> = () => {
             setIsLoading(false)
 
         }
-
-        // if page is > than max page:
-        //1 set is loading true
-        //2 set max page number to page 
-        //3 bring more transactions from the server.
-        //4 update the rows state,
-        //5 set is loading to false
-
     }
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
-            const rowsAmount = await GetTransactionsAmount();
+            const rowsAmount = await GetItemsCount();
             setRowsCount(rowsAmount)
-            const {list} = await GetTransactionsPagination(0);
+            const {list} = await GetItemsPagination(0);
             setRows(modifyRows(list))
             setIsLoading(false)
         }
@@ -109,7 +112,7 @@ const TransactionsTable: FC<Props> = () => {
                 initialState={{
                     pagination: {
                         paginationModel: {
-                            pageSize: 10,
+                            pageSize: 5,
                         },
                     },
                 }}

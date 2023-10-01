@@ -5,6 +5,8 @@ import CreateProductPage from './Pages/Create Product/Create-product'
 import AdminPage from './Pages/Admin/Admin-page'
 import LoginPage from './Pages/Login/Login'
 import {useAuth} from '@/Context/AuthContext'
+import { ToastContainer } from 'react-toastify'
+
 function App() {
   const { authenticated } = useAuth();
   return (
@@ -18,6 +20,7 @@ function App() {
        {authenticated &&<Route path='/Admin'  element={<AdminPage/>}/>}
       </Routes>
     </BrowserRouter>
+    <ToastContainer />
     </>
   )
 }

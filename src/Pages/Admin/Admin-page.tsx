@@ -10,9 +10,8 @@ const AdminPage: FC<Props> = () => {
     return (
         <>
         <Box sx={{ display: 'flex' }}>
-       <SideNav/>
-       <Box component="main" sx={{ flexGrow: 1, p:6,}}>
-              <DirectoryHeader header="Admin"/>    
+       <SideNav header='Admin'/>
+       <Box component="main" sx={{ flexGrow: 1, p:6,marginTop:5}}>
        </Box>
        </Box>
    </>

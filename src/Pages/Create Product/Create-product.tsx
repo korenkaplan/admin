@@ -4,13 +4,16 @@ import SideNav from '../../Components/sidenav/Side-nav';
 import DirectoryHeader from '@/Components/Ui Comps/Directory-header';
 import { makeStyles, createStyles } from '@mui/styles';
 import { CreateProductValidationSchema } from '@/Utils/Validation-schemas';
-import { CreateProductForm } from './Create-product-dto';
+import { CreateProductDto, CreateProductForm } from './Create-product-dto';
 import { Button, FormControl, InputLabel, TextField, IconButton, InputAdornment, OutlinedInput, Typography, Divider, Select, MenuItem, FormControlLabel, FormLabel, Input } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useDropzone } from 'react-dropzone';
-import { styled } from '@mui/material/styles';
+import axios from 'axios';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
+import { toast } from 'react-toastify';
 import {
     Formik,
     Form,
@@ -19,34 +22,94 @@ import {
 } from 'formik';
 import { Category, ClothingGender, Color, Fabric, Gender, Season } from '@/Utils/Global-enums';
 interface Props {
+
 }
 
 const CreateProductPage: FC<Props> = () => {
     const classes = useStyles();
-    const initialValues = { name: '', price: 0, colors: [],  season: Season.SpringSummer,  gender: ClothingGender.Male, fabric:'',category:'' }
-    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ maxFiles: 1, accept:{'image/png': ['.png'],'image/jpeg': [],'image/jpg': [],},})
+    const [isLoading,setIsLoading] = useState(false);
+    const [buttonTitle, setButtonTitle] = useState("Create Product");
+    const initialValues = { name: '', price: 0, colors: [], season: Season.SpringSummer, gender: ClothingGender.Male, fabric: '', category: '' }
+    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ maxFiles: 1, accept: { 'image/png': ['.png'], 'image/jpeg': [], 'image/jpg': [], }, })
     const handleSubmit = async (values: CreateProductForm, { setSubmitting }) => {
         //TODO: add image to s3 and add item to collection
         if (acceptedFiles.length == 0) {
             alert("Please select an image");
             return;
         }
-        alert(JSON.stringify(values));
-        setSubmitting(false);
+        setIsLoading(true)
+        setButtonTitle('Uploading Image to S3...')
+        const { imageUrl } = await uploadFile();
+        const dto: CreateProductDto = {
+            category: values.category,
+            name: values.name,
+            price: values.price,
+            imageSource: imageUrl,
+            fabric: values.fabric,
+            gender: values.gender,
+            season: values.season,
+            colors: values.colors
+        }
+        setButtonTitle('Saving new Product...')
+         const result:boolean = await createProduct(dto);
+        setIsLoading(false)
+        if(result)
+        {
 
+        }
+        setButtonTitle(result?'Created Successfully':'Failed TO Create')
+        setSubmitting(false);
+        setTimeout(() => {
+            setButtonTitle('Create Product')
+            }, 3000);
     }
-    const dropzoneInitText= (
+    const createProduct = async (dto: CreateProductDto) => {
+        const reqBody = {
+            ...dto
+        };
+
+        try {
+            const response = await axios.post('https://scan-and-go.onrender.com/items/create', reqBody);
+            console.log(response.data);
+            return response.status == 201; 
+        } catch (error:any) {
+           console.log(error.message);
+           return false
+            
+        }
+    }
+    const dropzoneInitText = (
         <div className={classes.dropzoneInitText} >
-            <CloudUploadIcon sx={{width:40,height:40,color:'lightskyblue'}}/>
+            <CloudUploadIcon sx={{ width: 40, height: 40, color: 'lightskyblue' }} />
             <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
     )
+    const uploadFile = async (): Promise<string> => {
+        if (acceptedFiles.length == 0) {
+            alert("Please select an image");
+            return '';
+        }
+        const formData = new FormData();
+        formData.append('file', acceptedFiles[0])
+        try {
+            const response = await axios.post('https://scan-and-go.onrender.com/items/uploadFile', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            console.log('File uploaded successfully:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            return ''
+        }
+    }
     return (
         <>
             <Box sx={{ display: 'flex' }}>
-                <SideNav />
-                <Box component="main" sx={{ flexGrow: 1, p: 6, }}>
-                    <DirectoryHeader header="Create Product" />
+                <SideNav header='Create Product' />
+                <Box component="main" sx={{ flexGrow: 1, p: 6,marginTop:5 }}>
                     <div className={classes.formContainer}>
                         <Formik
                             initialValues={initialValues}
@@ -197,25 +260,36 @@ const CreateProductPage: FC<Props> = () => {
                                         {acceptedFiles.length > 0 ? <p>{acceptedFiles[0].name}</p> : (dropzoneInitText)}
                                     </div>
                                 </div><br />
-                                <Button style={{ width: '50%', alignSelf: 'center' }} type='submit' variant="contained">submit</Button>
+                                <LoadingButton
+                                    color="primary"
+                                    type='submit'
+                                    loading={isLoading}
+                                    loadingPosition="start"
+                                    startIcon={<SaveIcon />}
+                                    variant='contained'
+                                >
+                                    <span>{buttonTitle}</span>
+                                </LoadingButton>
                             </Form>
                         </Formik>
+
                     </div>
                 </Box>
             </Box>
+
         </>
     );
 };
 const useStyles = makeStyles(() =>
     createStyles({
-        error:{
-            color:'red',
+        error: {
+            color: 'red',
         },
-        dropzoneInitText:{
-        display: 'flex',
-        flexDirection:'column',
-        justifyContent: 'space-around',
-        alignItems: 'center',
+        dropzoneInitText: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+            alignItems: 'center',
         },
         dropZoneDiv: {
             border: '2px dashed lightblue',
@@ -229,7 +303,7 @@ const useStyles = makeStyles(() =>
             backgroundColor: '#f5f5f5',
             outline: 'none',
             transition: 'border 0.24s ease-in-out',
-            
+
         },
         seasonRadioDiv: {
             width: '25%',
@@ -265,7 +339,7 @@ const useStyles = makeStyles(() =>
             justifyContent: 'space-between',
             alignItems: 'center',
             marginBottom: 25,
-        
+
         },
         priceDiv: {
             width: '20%'

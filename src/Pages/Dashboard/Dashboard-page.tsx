@@ -31,9 +31,8 @@ const DashboardPage: FC<Props> = () => {
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <SideNav />
-        <Box component="main" sx={{ flexGrow: 1, p: 6, }}>
-          <DirectoryHeader header="Dashboard" />
+        <SideNav header='Dashboard' />
+        <Box component="main" sx={{ flexGrow: 1, p: 6, marginTop:5}}>
           <DashboardTopRow />
           <div className={classes.periodRow}>
             <div className={classes.iconAndHeader}>
