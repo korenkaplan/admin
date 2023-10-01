@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Box from '@mui/material/Box';
 import SideNav from '../../Components/sidenav/Side-nav';
 import DirectoryHeader from '@/Components/Ui Comps/Directory-header';
@@ -9,7 +9,7 @@ import { Button, FormControl, InputLabel, TextField, IconButton, InputAdornment,
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
+import { useDropzone } from 'react-dropzone';
 import { styled } from '@mui/material/styles';
 import {
     Formik,
@@ -22,27 +22,25 @@ interface Props {
 }
 
 const CreateProductPage: FC<Props> = () => {
-    const initialValues: CreateProductForm = { name: '', price: 0, colors: [], imageFile: "",season:Season.Yearly,fabric:Fabric.Denim,gender:ClothingGender.Male }
     const classes = useStyles();
-
+    const initialValues = { name: '', price: 0, colors: [],  season: Season.SpringSummer,  gender: ClothingGender.Male, fabric:'',category:'' }
+    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ maxFiles: 1, accept:{'image/png': ['.png'],'image/jpeg': [],'image/jpg': [],},})
     const handleSubmit = async (values: CreateProductForm, { setSubmitting }) => {
+        //TODO: add image to s3 and add item to collection
+        if (acceptedFiles.length == 0) {
+            alert("Please select an image");
+            return;
+        }
         alert(JSON.stringify(values));
-        console.log(values);
         setSubmitting(false);
 
     }
-    
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  });
+    const dropzoneInitText= (
+        <div className={classes.dropzoneInitText} >
+            <CloudUploadIcon sx={{width:40,height:40,color:'lightskyblue'}}/>
+            <p>Drag 'n' drop some files here, or click to select files</p>
+        </div>
+    )
     return (
         <>
             <Box sx={{ display: 'flex' }}>
@@ -67,12 +65,12 @@ const VisuallyHiddenInput = styled('input')({
                                                         label="Name"
                                                         variant="outlined"
                                                         {...field}
-
+                                                        name='name'
                                                     />
                                                 </FormControl>
                                             )}
                                         </Field>
-                                        <ErrorMessage name="name" component="div" className='error' />
+                                        <ErrorMessage name="name" component="div" className={classes.error} />
                                     </div>
                                     <div className={classes.priceDiv}>
                                         <Field name="price">
@@ -89,7 +87,7 @@ const VisuallyHiddenInput = styled('input')({
                                                 </FormControl>
                                             )}
                                         </Field>
-                                        <ErrorMessage name="price" component="div" className='error' />
+                                        <ErrorMessage name="price" component="div" className={classes.error} />
                                     </div>
                                 </div>
                                 <div className={classes.secondRow}>
@@ -115,7 +113,7 @@ const VisuallyHiddenInput = styled('input')({
                                                 </FormControl>
                                             )}
                                         </Field>
-                                        <ErrorMessage name="category" component="div" className='error' />
+                                        <ErrorMessage name="category" component="div" className={classes.error} />
                                     </div>
                                     <div className={classes.selectFabricDiv}>
                                         <Field name="fabric">
@@ -139,7 +137,7 @@ const VisuallyHiddenInput = styled('input')({
                                                 </FormControl>
                                             )}
                                         </Field>
-                                        <ErrorMessage name="fabric" component="div" className='error' />
+                                        <ErrorMessage name="fabric" component="div" className={classes.error} />
                                     </div>
                                 </div>
                                 <div className={classes.thirdRow}>
@@ -166,7 +164,7 @@ const VisuallyHiddenInput = styled('input')({
                                                 </FormControl>
                                             )}
                                         </Field>
-                                        <ErrorMessage name="colors" component="div" className='error' />
+                                        <ErrorMessage name="colors" component="div" className={classes.error} />
                                     </div>
                                     <div className={classes.genderRadioDiv}>
                                         <FormControl>
@@ -194,20 +192,11 @@ const VisuallyHiddenInput = styled('input')({
                                     </div>
                                 </div>
                                 <div>
-                                    <Field name="imageFile">
-                                        {({ field }: any) => (
-                                            // <FormControl>
-                                            //     <input {...field} name='imageFile' type="file" accept="image/png, image/jpeg"/>
-                                            // </FormControl>
-                                            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                            Upload file
-                                            <VisuallyHiddenInput  name="imageFile" {...field} type="file"  accept="image/png, image/jpeg" />
-                                            {initialValues.imageFile}
-                                          </Button>
-                                        )}
-                                    </Field>
-                                    <ErrorMessage name="imageFile" component="div" className='error' />
-                                </div>
+                                    <div {...getRootProps({ className: 'dropzone' })} className={classes.dropZoneDiv}>
+                                        <input {...getInputProps()} />
+                                        {acceptedFiles.length > 0 ? <p>{acceptedFiles[0].name}</p> : (dropzoneInitText)}
+                                    </div>
+                                </div><br />
                                 <Button style={{ width: '50%', alignSelf: 'center' }} type='submit' variant="contained">submit</Button>
                             </Form>
                         </Formik>
@@ -219,7 +208,29 @@ const VisuallyHiddenInput = styled('input')({
 };
 const useStyles = makeStyles(() =>
     createStyles({
-        dropZoneDiv: {},
+        error:{
+            color:'red',
+        },
+        dropzoneInitText:{
+        display: 'flex',
+        flexDirection:'column',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        },
+        dropZoneDiv: {
+            border: '2px dashed lightblue',
+            borderRadius: '4px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            minHeight: '100px',
+            cursor: 'pointer',
+            backgroundColor: '#f5f5f5',
+            outline: 'none',
+            transition: 'border 0.24s ease-in-out',
+            
+        },
         seasonRadioDiv: {
             width: '25%',
         },
@@ -233,11 +244,14 @@ const useStyles = makeStyles(() =>
         thirdRow: {
             display: 'flex',
             justifyContent: 'space-between',
+            marginBottom: 25,
 
         },
         secondRow: {
             display: 'flex',
             justifyContent: 'space-between',
+            marginBottom: 25,
+
 
         },
         selectCategoryDiv: {
@@ -250,6 +264,8 @@ const useStyles = makeStyles(() =>
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            marginBottom: 25,
+        
         },
         priceDiv: {
             width: '20%'
