@@ -68,7 +68,7 @@ const LoginPage: FC<Props> = () => {
             </FormControl>
           )}
         </Field>
-        <ErrorMessage name="email" component="div" className='error' />
+        <ErrorMessage name="email" component="div" className={classes.error} />
       </div>
       <br />
       <div>
@@ -98,7 +98,7 @@ const LoginPage: FC<Props> = () => {
             </FormControl>
           )}
         </Field>
-        <ErrorMessage name="password" component="div" className='error' />
+        <ErrorMessage name="password" component="div" className={classes.error} />
       </div>
       <br />
       <Button style={{width:'50%', alignSelf:'center',backgroundColor:buttonColor}} type='submit' variant="contained">Login</Button>

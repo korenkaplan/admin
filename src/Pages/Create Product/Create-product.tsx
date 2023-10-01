@@ -81,7 +81,7 @@ const CreateProductPage: FC<Props> = () => {
     const dropzoneInitText = (
         <div className={classes.dropzoneInitText} >
             <CloudUploadIcon sx={{ width: 40, height: 40, color: 'lightskyblue' }} />
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <p>Drag 'n' drop an image here, or click to select an image</p>
         </div>
     )
     const uploadFile = async (): Promise<string> => {
