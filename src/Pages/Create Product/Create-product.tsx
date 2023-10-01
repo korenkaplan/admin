@@ -219,7 +219,7 @@ const useStyles = makeStyles(() =>
         },
         dropZoneDiv: {
             border: '2px dashed lightblue',
-            borderRadius: '4px',
+            borderRadius: '20px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
