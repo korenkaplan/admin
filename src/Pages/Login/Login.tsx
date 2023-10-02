@@ -12,35 +12,53 @@ import {
 import { LoginValidationSchema } from '@/Utils/Validation-schemas';
 import { useAuth } from '@/Context/AuthContext'
 import { LoginDto } from './Login-Dto';
+import LoadingButton from '@mui/lab/LoadingButton';
+import LoginIcon from '@mui/icons-material/Login';
+import { ToastContainer,toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 interface Props { }
 interface MyFormValues {
   email: string;
   password: string;
   rememberMe:boolean;
 }
+
 const LoginPage: FC<Props> = () => {
-  const buttonColor = '#5AE4A8'
-  const classes = useStyles();
-  const { loginAttempt } = useAuth()
+
+  const [isLoading,setIsLoading] = useState(false);
+  const [buttonTitle, setButtonTitle] = useState("Login");
   const [showPassword, setShowPassword] = useState(false);
   const [isRememberMe, setIsRememberMe] = useState(false);
+  const classes = useStyles();
+  const { loginAttempt } = useAuth()
+  const buttonColor = '#5AE4A8'
+  const initialValues: MyFormValues = { email: '', password: '',rememberMe: false};
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
-  const initialValues: MyFormValues = { email: '', password: '',rememberMe: false};
   const handleSubmit = async (values: LoginDto, { setSubmitting }) => {
+    setIsLoading(true)
     const dto: LoginDto = {
       email: values.email,
       password: values.password,
       rememberMe: isRememberMe
     }
-    await loginAttempt(dto)
+    const result = await loginAttempt(dto)
+    setIsLoading(false)
+    if(!result){
+      toast("Login failed Email or password are incorrect",{ type: "error",autoClose:3000,theme: "colored",hideProgressBar: false, });
+    }
+    else{
+      toast("Login Successful",{ type: "success",autoClose:3000,theme: "colored",hideProgressBar: false, });
+    }
     setSubmitting(false);
+
   };
   const handleCheckboxChange = ()=>{
     setIsRememberMe(!isRememberMe)
   }
+
   const introDiv = (
     <div style={{ marginBottom: '10%' }}>
       <h1>Scan & Go</h1>
@@ -105,7 +123,7 @@ const LoginPage: FC<Props> = () => {
         </div>
         <br />
           <FormControlLabel control={<Checkbox onChange={handleCheckboxChange} value={isRememberMe}  />} label={isRememberMe? 'Remembered':'Remember me'} />
-        <Button style={{ width: '50%', alignSelf: 'center', backgroundColor: buttonColor }} type='submit' variant="contained">Login</Button>
+          <LoadingButton  type='submit' loading={isLoading} loadingPosition="start" startIcon={<LoginIcon />} variant='contained' sx={{ width: '50%', alignSelf: 'center',backgroundColor: buttonColor}}> <span>{buttonTitle}</span></LoadingButton>
       </Form>
     </Formik>
   )
@@ -115,12 +133,14 @@ const LoginPage: FC<Props> = () => {
       {formik}
     </div>
   )
+
   return (
     <div className={classes.container}>
       {leftDiv}
       <div className={classes.imageDiv}>
         <img src={loginBackground} alt="Background" className={classes.image} />
       </div>
+      <ToastContainer />
     </div>
   );
 };

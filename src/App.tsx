@@ -6,10 +6,18 @@ import AdminPage from './Pages/Admin/Admin-page'
 import LoginPage from './Pages/Login/Login'
 import { useAuth } from '@/Context/AuthContext'
 import { ToastContainer } from 'react-toastify'
-import { useState } from 'react'
+import { useEffect } from 'react'
 
 function App() {
-  const { authenticated } = useAuth();
+  const { authenticated,setAuthenticated,setToken } = useAuth();
+  useEffect(() => {
+  const token = localStorage.getItem('token')
+  if(token){
+    setAuthenticated(true)
+    setToken(token)
+  }
+  }, [])
+  
   const authRoutes = (
     <Routes>
     <Route path='/' element={<DashboardPage />} />

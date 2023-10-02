@@ -143,7 +143,7 @@ const handleDrawerClose = () => {
         <Divider />
         <List >
           <div >
-          <ListItem onClick={()=>{navigate('/Dashboard')}} disablePadding sx={{ display: 'block' }}>
+          <ListItem onClick={()=>{navigate('/')}} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,

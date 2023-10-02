@@ -32,7 +32,7 @@ const DashboardPage: FC<Props> = () => {
     <>
       <Box sx={{ display: 'flex' }}>
         <SideNav header='Dashboard' />
-        <Box component="main" sx={{ flexGrow: 1, p: 6, marginTop:5}}>
+        <Box component="main" sx={{ flexGrow: 1, p: 6, marginTop:8}}>
           <DashboardTopRow />
           <div className={classes.periodRow}>
             <div className={classes.iconAndHeader}>
@@ -89,7 +89,7 @@ const useStyles = makeStyles(() =>
       alignItems: 'center',
     },
     periodRow: {
-      marginTop: 10,
+      marginTop: 20,
       width: '100%',
       height: '50px',
       display: 'flex',
