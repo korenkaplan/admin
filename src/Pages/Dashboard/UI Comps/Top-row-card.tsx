@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { makeStyles, createStyles } from '@mui/styles';
 import { Divider, Typography } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line} from 'recharts';
+import { TopRowCardGraphData } from '../Dashboard-dto';
 
 interface Props {
     themeColor: string;
@@ -9,36 +10,11 @@ interface Props {
     icon: React.ReactNode
     number: number;
     isMoney:boolean
-    percentages: number
-    isPercentagesPositive: boolean
-    timePeriod:string
+    data:TopRowCardGraphData[]
 }
 
-const TopRowCard: FC<Props> = ({themeColor,header,icon,number,isMoney,percentages,timePeriod,isPercentagesPositive}) => {
+const TopRowCard: FC<Props> = ({themeColor,header,icon,number,isMoney,data}) => {
   const classes = useStyles();
-  const data = [
-    {
-      pv: 2400,
-    },
-    {
-      pv: 1398,
-    },
-    {
-      pv: 9800,
-    },
-    {
-      pv: 3908,
-    },
-    {
-      pv: 4800,
-    },
-    {
-      pv: 3800,
-    },
-    {
-      pv: 4300,
-    },
-  ];
   const iconDivStyle = {
     backgroundColor: themeColor, 
     width: '50px',
@@ -75,7 +51,7 @@ const TopRowCard: FC<Props> = ({themeColor,header,icon,number,isMoney,percentage
            {icon}
           </div>
           <LineChart width={100} height={50} data={data}>
-          <Line dot={false} type="monotone" dataKey="pv" stroke={themeColor} strokeWidth={2} />
+          <Line dot={false} type="monotone" dataKey="value" stroke={themeColor} strokeWidth={2} />
       </LineChart>
           <div className={classes.headersDiv}>
             <Typography sx={{fontWeight:'300',color:'#33333'}}>{header}</Typography>

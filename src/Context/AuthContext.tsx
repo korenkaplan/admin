@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const api: AxiosInstance = axios.create({
     baseURL: 'https://scan-and-go.onrender.com', // Set your base URL
   });
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(true);
   const [token, setToken] = useState<string | null>(null);
 
   const loginAttempt = async (dto: LoginDto): Promise<boolean> => {

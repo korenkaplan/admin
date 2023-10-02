@@ -6,6 +6,9 @@ export interface DashboardTopRowDto {
     transactionsAmount: number;
     transactionsAmountDifferencePercentage: number;
 }
+export interface TopRowCardGraphData{
+    value: number;
+}
 export interface TopSellingItemsDto {
     weekly: IStats[]
     monthly: IStats[]
@@ -38,4 +41,9 @@ export interface ITopSellingItem {
     _id:string,
     name:string,
     totalTagsAmount:number,
+}
+export interface ZeroData {
+    monthly:{count:number, value:number}[]
+    yearly:{count:number, value:number}[]
+    weekly:{count:number, value:number}[]
 }
