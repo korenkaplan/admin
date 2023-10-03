@@ -13,14 +13,16 @@ import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-import { toast } from 'react-toastify';
+import { ToastContainer,toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {
     Formik,
     Form,
     Field,
     ErrorMessage,
 } from 'formik';
-import { Category, ClothingGender, Color, Fabric, Gender, Season } from '@/Utils/Global-enums';
+import { Category, ClothingGender, Color, Fabric, Season } from '@/Utils/Global-enums';
 interface Props {
 
 }
@@ -38,8 +40,14 @@ const CreateProductPage: FC<Props> = () => {
             return;
         }
         setIsLoading(true)
-        setButtonTitle('Uploading Image to S3...')
+        setButtonTitle('Loading...')
         const { imageUrl } = await uploadFile();
+        if(imageUrl == '')
+        {
+            toast("Failed to upload the image, process has stopped ",{ type: "error",autoClose:3000,theme: "colored",hideProgressBar: false, });
+            return
+        }
+
         const dto: CreateProductDto = {
             category: values.category,
             name: values.name,
@@ -50,18 +58,19 @@ const CreateProductPage: FC<Props> = () => {
             season: values.season,
             colors: values.colors
         }
-        setButtonTitle('Saving new Product...')
-         const result:boolean = await createProduct(dto);
-        setIsLoading(false)
-        if(result)
+         const status:number = await createProduct(dto);
+        if(status == 201 )
         {
+            toast("Product Created Successfully",{ type: "success",autoClose:5000,theme: "colored",hideProgressBar: false, });
 
         }
-        setButtonTitle(result?'Created Successfully':'Failed TO Create')
+        else {
+            toast("Failed to create, try another name or try again later ",{ type: "error",autoClose:5000,theme: "colored",hideProgressBar: false, });
+        }
+        setIsLoading(false)
+        setButtonTitle('Create Product')
         setSubmitting(false);
-        setTimeout(() => {
-            setButtonTitle('Create Product')
-            }, 3000);
+        
     }
     const createProduct = async (dto: CreateProductDto) => {
         const reqBody = {
@@ -71,10 +80,14 @@ const CreateProductPage: FC<Props> = () => {
         try {
             const response = await axios.post('https://scan-and-go.onrender.com/items/create', reqBody);
             console.log(response.data);
-            return response.status == 201; 
+            return response.status; 
         } catch (error:any) {
-           console.log(error.message);
-           return false
+            if (error.response) {
+                return error.response.status; // Return the HTTP status code
+            } else {
+                console.log('Error message:', error.message); // Log the error message
+                return 500; // You can return a default message or handle it as per your requirement
+            }
             
         }
     }
@@ -270,6 +283,7 @@ const CreateProductPage: FC<Props> = () => {
                                     loadingPosition="start"
                                     startIcon={<SaveIcon />}
                                     variant='contained'
+                                    sx={{width:'200px',alignSelf:'center'}}
                                 >
                                     <span>{buttonTitle}</span>
                                 </LoadingButton>
@@ -278,7 +292,9 @@ const CreateProductPage: FC<Props> = () => {
 
                     </div>
                 </Box>
+
             </Box>
+      <ToastContainer />
 
         </>
     );

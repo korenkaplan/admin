@@ -16,6 +16,8 @@ import TransactionsAmountGraph from './Graphs/Transactions-amount-graph';
 import UsersAmountGraph from './Graphs/Users-amount-graph';
 import axios from 'axios';
 import { GraphStats, ITopSellingItem, TransactionGraphStats, ZeroData } from './Dashboard-dto';
+import CustomLineChart from './UI Comps/Line-chart';
+import CustomBarChart from './UI Comps/Bar-chart';
 interface Props {
 }
 
@@ -246,13 +248,13 @@ const DashboardPage: FC<Props> = () => {
             </div>
           </div>
           <div className={classes.firstRowGraphs}>
-            <RevenueGraph graphData={transactionsGraphDataState} color={revenueGraphColor} period={timePeriod} />
-            <TransactionsAmountGraph graphData={transactionsGraphDataState} color={transactionsAmountGraphColor} period={timePeriod} />
+            <CustomLineChart XAxisDataKey='label' YAxisDataKey='value' header=' Scan & Go Revenue Chart' graphData={transactionsGraphDataState} color={revenueGraphColor} period={timePeriod}/>
+            <CustomLineChart XAxisDataKey='label' YAxisDataKey='count' header='Transactions Amount' graphData={transactionsGraphDataState} color={transactionsAmountGraphColor} period={timePeriod}/>
           </div>
           <Divider />
           <div className={classes.secondRowGraphs}>
-            <UsersAmountGraph graphData={usersGraphDataState} color={usersAmountGraphColor} period={timePeriod} />
-            <TopSellingItems color={topSellingItemsColor} graphData={topSellsGraphDataState} />
+          <CustomLineChart XAxisDataKey='label' YAxisDataKey='value' header='New Registrations Chart' graphData={usersGraphDataState} color={usersAmountGraphColor} period={timePeriod}/>
+          <CustomBarChart YAxisDataKey='name' XAxisDataKey='totalTagsAmount' YAxisType='category' XAxisType='number' header='Top Selling Items'  graphData={topSellsGraphDataState}  layout='vertical' color={topSellingItemsColor}  />
           </div>
         </Box>
       </Box>
@@ -290,4 +292,4 @@ const useStyles = makeStyles(() =>
     },
   }))
 export default DashboardPage;
-          {/* {transactionsGraphDataState && usersGraphDataState && <DashboardTopRow transactionsData={transactionsGraphDataState} usersData={usersGraphDataState} />}  */}
+

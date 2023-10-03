@@ -16,7 +16,6 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import AddIcon from '@mui/icons-material/Add';
 import MenuIcon from '@mui/icons-material/Menu';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {useNavigate} from 'react-router-dom';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -138,13 +137,13 @@ navigate('/')
         </Toolbar>
       </AppBar>
       <Drawer  variant="permanent" open={open}>
-        <DrawerHeader >
+        <DrawerHeader  >
           <IconButton onClick={handleDrawerClose}>
             {open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List >
+        <List sx={{height:'100vh',display:'flex',flexDirection:'column',justifyContent:'space-between'}} >
           <div >
           <ListItem onClick={()=>{navigate('/')}} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
@@ -206,27 +205,7 @@ navigate('/')
                 <ListItemText primary={'Create Product'} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            <ListItem onClick={()=>{navigate('/Admin')}} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {<AdminPanelSettingsIcon/>}
-                </ListItemIcon>
-                <ListItemText primary={'Admin'} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-               <Divider />
-            </ListItem>
+            <Divider />
           </div>
           <div>
           <ListItem onClick={handleLogout} disablePadding sx={{ display: 'block' }}>

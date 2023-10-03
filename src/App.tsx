@@ -1,8 +1,7 @@
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
+import { Routes, Route, BrowserRouter} from 'react-router-dom'
 import DashboardPage from './Pages/Dashboard/Dashboard-page'
 import TablesPage from './Pages/Tables/Tables-page'
 import CreateProductPage from './Pages/Create Product/Create-product'
-import AdminPage from './Pages/Admin/Admin-page'
 import LoginPage from './Pages/Login/Login'
 import { useAuth } from '@/Context/AuthContext'
 import { ToastContainer } from 'react-toastify'
@@ -23,7 +22,6 @@ function App() {
     <Route path='/' element={<DashboardPage />} />
     <Route path='/Tables' element={<TablesPage />} />
     <Route path='/Create' element={<CreateProductPage />} />
-    <Route path='/Admin' element={<AdminPage />} />
   </Routes>
   )
   const notAuthRoutes=(
