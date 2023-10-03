@@ -1,116 +1,30 @@
 import React, { FC,  useEffect, useState } from 'react';
 import { makeStyles, createStyles } from '@mui/styles';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { GraphStats, ZeroData } from '../Dashboard-dto';
 interface Props {
   period:string
   color:string
+  graphData:GraphStats | ZeroData
 }
 
-const RevenueGraph: FC<Props> = ({period,color}) => {
+const RevenueGraph: FC<Props> = ({period,color,graphData}) => {
   const classes = useStyles();
-  const WeeklyData = [
-    {
-      title: "Sun",
-      value: 1400,
-    },
-    {
-      title: "Mon",
-      value: 2700,
-    },
-    {
-      title: "Tue",
-      value: 2600,
-    },
-    {
-      title: "Wed",
-      value: 1200,
-    },
-    {
-      title: "Thu",
-      value: 2400,
-    },
-    {
-      title: "Fri",
-      value: 2900,
-    },
-    {
-      title: "Sat",
-      value: 2800,
-    },
-  ];
-  const MonthlyData = [
-    {
-      title: "Mar",
-      value: 1400,
-    },
-    {
-      title: "Apr",
-      value: 2700,
-    },
-    {
-      title: "May",
-      value: 2600,
-    },
-    {
-      title: "Jun",
-      value: 1200,
-    },
-    {
-      title: "Jul",
-      value: 2400,
-    },
-    {
-      title: "Aug",
-      value: 2900,
-    },
-    {
-      title: "Sep",
-      value: 2800,
-    },
-  ];
-  const YearlyData = [
-    {
-      title: "2017",
-      value: 1400,
-    },
-    {
-      title: "2018",
-      value: 2700,
-    },
-    {
-      title: "2019",
-      value: 2600,
-    },
-    {
-      title: "2020",
-      value: 1200,
-    },
-    {
-      title: "2021",
-      value: 2400,
-    },
-    {
-      title: "2022",
-      value: 2900,
-    },
-    {
-      title: "2023",
-      value: 2800,
-    },
-  ];
-  const [data, setData] = useState(MonthlyData)
+
+  const [data, setData] = useState<GraphStats>()
   //TODO: Fetch the data from the server on use effect
   useEffect(() => {
     console.log(period);
     
     if(period === 'Weekly')
-    setData(WeeklyData)
+    setData(graphData?.weekly)
     else if(period === 'Monthly')
-    setData(MonthlyData)
+    setData(graphData?.monthly)
     else if(period === 'Yearly')
-    setData(YearlyData)
+    setData(graphData?.yearly)
   }
-  , [period])
+  , [period,graphData] )
+  console.log(graphData);
   
   return (
     <div className={classes.chartContainer}>
@@ -130,7 +44,7 @@ const RevenueGraph: FC<Props> = ({period,color}) => {
       
     >
        <CartesianGrid  strokeDasharray="3 3" fill='transparent' /> {/* Set the fill color for the background */}
-      <XAxis dataKey="title" />
+      <XAxis dataKey="label" />
       <YAxis dataKey="value" />
       <Tooltip />
       <Legend />

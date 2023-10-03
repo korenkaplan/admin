@@ -19,7 +19,7 @@ function App() {
   }, [])
   
   const authRoutes = (
-    <Routes>
+   <Routes>
     <Route path='/' element={<DashboardPage />} />
     <Route path='/Tables' element={<TablesPage />} />
     <Route path='/Create' element={<CreateProductPage />} />
@@ -31,7 +31,7 @@ function App() {
     <Route path='/' element={<LoginPage />} />
   </Routes>
   )
-  console.log('here  authenticated: ',authenticated)
+  console.log('authenticated: ',authenticated)
   return (
     <>
       <BrowserRouter>

@@ -111,7 +111,10 @@ const MiniDrawer:FC<Props> =({header})=> {
 const handleDrawerClose = () => {
   setOpen(false);
 };
-
+const handleLogout = () => {
+logout();
+navigate('/')
+}
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -226,7 +229,7 @@ const handleDrawerClose = () => {
             </ListItem>
           </div>
           <div>
-          <ListItem onClick={logout} disablePadding sx={{ display: 'block' }}>
+          <ListItem onClick={handleLogout} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,

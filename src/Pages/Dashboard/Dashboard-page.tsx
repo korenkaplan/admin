@@ -224,7 +224,6 @@ const DashboardPage: FC<Props> = () => {
       <Box sx={{ display: 'flex' }}>
         <SideNav header='Dashboard' />
         <Box component="main" sx={{ flexGrow: 1, p: 6, marginTop: 8 }}>
-          {/* {transactionsGraphDataState && usersGraphDataState ? loadedTopRow : notLoadedTopRow} */}
           <DashboardTopRow transactionsData={transactionsGraphDataState} usersData={usersGraphDataState} />
           <div className={classes.periodRow}>
             <div className={classes.iconAndHeader}>
@@ -247,7 +246,7 @@ const DashboardPage: FC<Props> = () => {
             </div>
           </div>
           <div className={classes.firstRowGraphs}>
-            <RevenueGraph color={revenueGraphColor} period={timePeriod} />
+            <RevenueGraph graphData={transactionsGraphDataState} color={revenueGraphColor} period={timePeriod} />
             <TopSellingItems color={topSellingItemsColor} period={timePeriod} />
           </div>
           <Divider />
@@ -281,12 +280,13 @@ const useStyles = makeStyles(() =>
       alignItems: 'center',
     },
     periodRow: {
-      marginTop: 20,
-      width: '100%',
+      marginTop: 30,
+      width: '85%',
       height: '50px',
       display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'center',
+      margin:'auto',
     },
   }))
 export default DashboardPage;

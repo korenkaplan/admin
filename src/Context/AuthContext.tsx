@@ -1,6 +1,7 @@
 import { LoginDto } from '@/Pages/Login/Login-Dto';
 import axios, { AxiosInstance } from 'axios';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import {useNavigate} from 'react-router-dom';
 
 interface AuthContextType {
   authenticated: boolean;
@@ -18,12 +19,12 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+
   const api: AxiosInstance = axios.create({
     baseURL: 'https://scan-and-go.onrender.com', // Set your base URL
   });
-  const [authenticated, setAuthenticated] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-
   const loginAttempt = async (dto: LoginDto): Promise<boolean> => {
     const { email, password, rememberMe } = dto;
 
