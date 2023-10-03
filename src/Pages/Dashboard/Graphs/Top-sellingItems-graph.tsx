@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useState } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { makeStyles, createStyles } from '@mui/styles';
+import { ITopSellingItem } from '../Dashboard-dto';
 interface Props {
-    period: string
     color:string
+    graphData:ITopSellingItem[]
 }
 
-const TopSellingItems: FC<Props> = ({ period,color }) => {
+const TopSellingItems: FC<Props> = ({color, graphData}) => {
     const classes = useStyles();
     const WeeklyData = [
         {
@@ -76,18 +77,11 @@ const TopSellingItems: FC<Props> = ({ period,color }) => {
             value: 350000
         },
     ];
-    const [data, setsData] = useState(MonthlyData)
+    const [data, setsData] = useState<ITopSellingItem[]>(graphData)
 
     useEffect(() => {
-        if (period == 'Weekly')
-            setsData(WeeklyData)
-        else if (period == 'Monthly')
-            setsData(MonthlyData)
-        else if (period == 'Yearly')
-            setsData(YearlyData)
-        else
-            setsData(WeeklyData)
-    }, [period])
+        setsData(graphData)
+    }, [graphData])
 
     return (
         <div className={classes.chartContainer}>
@@ -107,11 +101,11 @@ const TopSellingItems: FC<Props> = ({ period,color }) => {
                 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="value" />
-                <YAxis type="category" width={150} padding={{ left: 20 }} dataKey="title"/>
+                <XAxis type="number" dataKey="totalTagsAmount"  />
+                <YAxis type="category" width={150} padding={{ left: 20 }} dataKey="name"/>
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="value" fill={color} />
+                <Bar dataKey="totalTagsAmount" fill={color} />
             </BarChart>
         </div>
     );

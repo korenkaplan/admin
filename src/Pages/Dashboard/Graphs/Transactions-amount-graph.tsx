@@ -1,12 +1,14 @@
 import React, { FC,  useEffect, useState } from 'react';
 import { makeStyles, createStyles } from '@mui/styles';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { GraphStats, ZeroData } from '../Dashboard-dto';
 interface Props {
   period:string
   color:string
+  graphData:GraphStats | ZeroData
 }
 
-const TransactionsAmountGraph: FC<Props> = ({period,color}) => {
+const TransactionsAmountGraph: FC<Props> = ({period,color,graphData}) => {
   const classes = useStyles();
   const WeeklyData = [
     {
@@ -98,19 +100,18 @@ const TransactionsAmountGraph: FC<Props> = ({period,color}) => {
       value: 2800,
     },
   ];
-  const [data, setData] = useState(MonthlyData)
-  //TODO: Fetch the data from the server on use effect
+  const [data, setData] = useState<GraphStats>()
   useEffect(() => {
     console.log(period);
     
     if(period === 'Weekly')
-    setData(WeeklyData)
+    setData(graphData?.weekly)
     else if(period === 'Monthly')
-    setData(MonthlyData)
+    setData(graphData?.monthly)
     else if(period === 'Yearly')
-    setData(YearlyData)
+    setData(graphData?.yearly)
   }
-  , [period])
+  , [period,graphData])
   
   return (
     <div className={classes.chartContainer}>
@@ -130,13 +131,13 @@ const TransactionsAmountGraph: FC<Props> = ({period,color}) => {
       
     >
        <CartesianGrid  strokeDasharray="3 3" fill='transparent' /> {/* Set the fill color for the background */}
-      <XAxis dataKey="title" />
-      <YAxis dataKey="value" />
+      <XAxis dataKey="label" />
+      <YAxis dataKey="count" />
       <Tooltip />
       <Legend />
       <Line
         type="monotone"
-        dataKey="value"
+        dataKey="count"
         stroke={color}
         activeDot={{ r: 8 }}
       />

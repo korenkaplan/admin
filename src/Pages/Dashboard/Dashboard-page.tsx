@@ -15,7 +15,7 @@ import TopSellingItems from './Graphs/Top-sellingItems-graph';
 import TransactionsAmountGraph from './Graphs/Transactions-amount-graph';
 import UsersAmountGraph from './Graphs/Users-amount-graph';
 import axios from 'axios';
-import { GraphStats, TransactionGraphStats, ZeroData } from './Dashboard-dto';
+import { GraphStats, ITopSellingItem, TransactionGraphStats, ZeroData } from './Dashboard-dto';
 interface Props {
 }
 
@@ -192,7 +192,7 @@ const DashboardPage: FC<Props> = () => {
   const transactionsAmountGraphColor = '#DAA211';
   const [transactionsGraphDataState, setTransactionsGraphDataState] = useState<TransactionGraphStats| ZeroData>(ZeroData);
   const [usersGraphDataState, setUsersGraphDataState] = useState<GraphStats | ZeroData>(ZeroData);
-  const [topSellsGraphDataState, setTopSellsGraphDataState] = useState()
+  const [topSellsGraphDataState, setTopSellsGraphDataState] = useState<ITopSellingItem[]>([])
   const handleChange = (event: SelectChangeEvent) => {
     setTimePeriod(event.target.value);
   };
@@ -247,12 +247,12 @@ const DashboardPage: FC<Props> = () => {
           </div>
           <div className={classes.firstRowGraphs}>
             <RevenueGraph graphData={transactionsGraphDataState} color={revenueGraphColor} period={timePeriod} />
-            <TopSellingItems color={topSellingItemsColor} period={timePeriod} />
+            <TransactionsAmountGraph graphData={transactionsGraphDataState} color={transactionsAmountGraphColor} period={timePeriod} />
           </div>
           <Divider />
           <div className={classes.secondRowGraphs}>
-            <TransactionsAmountGraph color={transactionsAmountGraphColor} period={timePeriod} />
-            <UsersAmountGraph color={usersAmountGraphColor} period={timePeriod} />
+            <UsersAmountGraph graphData={usersGraphDataState} color={usersAmountGraphColor} period={timePeriod} />
+            <TopSellingItems color={topSellingItemsColor} graphData={topSellsGraphDataState} />
           </div>
         </Box>
       </Box>

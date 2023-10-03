@@ -4,111 +4,22 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 interface Props {
   period:string
   color:string
+  graphData:GraphStats | ZeroData
 }
 
-const UsersAmountGraph: FC<Props> = ({period,color}) => {
+const UsersAmountGraph: FC<Props> = ({period,color,graphData}) => {
   const classes = useStyles();
-  const WeeklyData = [
-    {
-      title: "Sun",
-      value: 14,
-    },
-    {
-      title: "Mon",
-      value: 30,
-    },
-    {
-      title: "Tue",
-      value: 50,
-    },
-    {
-      title: "Wed",
-      value: 80,
-    },
-    {
-      title: "Thu",
-      value: 40,
-    },
-    {
-      title: "Fri",
-      value: 30,
-    },
-    {
-      title: "Sat",
-      value: 50,
-    },
-  ];
-  const MonthlyData = [
-    {
-      title: "Mar",
-      value: 300,
-    },
-    {
-      title: "Apr",
-      value: 400,
-    },
-    {
-      title: "May",
-      value: 200,
-    },
-    {
-      title: "Jun",
-      value: 150,
-    },
-    {
-      title: "Jul",
-      value: 500,
-    },
-    {
-      title: "Aug",
-      value: 600,
-    },
-    {
-      title: "Sep",
-      value: 400,
-    },
-  ];
-  const YearlyData = [
-    {
-      title: "2017",
-      value: 0,
-    },
-    {
-      title: "2018",
-      value: 1000,
-    },
-    {
-      title: "2019",
-      value: 1200,
-    },
-    {
-      title: "2020",
-      value: 1500,
-    },
-    {
-      title: "2021",
-      value: 1000,
-    },
-    {
-      title: "2022",
-      value: 950,
-    },
-    {
-      title: "2023",
-      value: 2500,
-    },
-  ];
-  const [data, setData] = useState(MonthlyData)
+  const [data, setData] = useState<GraphStats>()
   //TODO: Fetch the data from the server on use effect
   useEffect(() => {
     if(period === 'Weekly')
-    setData(WeeklyData)
+    setData(graphData?.weekly)
     else if(period === 'Monthly')
-    setData(MonthlyData)
+    setData(graphData?.monthly)
     else if(period === 'Yearly')
-    setData(YearlyData)
+    setData(graphData?.yearly)
   }
-  , [period])
+  , [period,graphData])
   
   return (
     <div className={classes.chartContainer}>
@@ -128,7 +39,7 @@ const UsersAmountGraph: FC<Props> = ({period,color}) => {
       
     >
        <CartesianGrid  strokeDasharray="3 3" fill='transparent' /> {/* Set the fill color for the background */}
-      <XAxis dataKey="title" />
+      <XAxis dataKey="label" />
       <YAxis dataKey="value" />
       <Tooltip  />
       <Legend />
