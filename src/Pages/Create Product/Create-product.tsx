@@ -137,7 +137,7 @@ const CreateProductPage: FC<Props> = () => {
                                     <div className={classes.nameDiv}>
                                         <Field name="name">
                                             {({ field }: any) => (
-                                                <FormControl variant="outlined" fullWidth>
+                                                <FormControl variant="outlined" fullWidth >
                                                     <InputLabel htmlFor="NameInput">Name</InputLabel>
                                                     <OutlinedInput
                                                         id="NameInput"
@@ -283,7 +283,7 @@ const CreateProductPage: FC<Props> = () => {
                                     loadingPosition="start"
                                     startIcon={<SaveIcon />}
                                     variant='contained'
-                                    sx={{width:'200px',alignSelf:'center'}}
+                                    sx={{width:'200px',alignSelf:'center',boxShadow: '4px 6px 8px rgba(0, 0, 0, 0.3)',}}
                                 >
                                     <span>{buttonTitle}</span>
                                 </LoadingButton>
@@ -364,6 +364,7 @@ const useStyles = makeStyles(() =>
         },
         nameDiv: {
             width: '65%',
+            
         },
         formContainer: {
             width: '45%',

@@ -60,8 +60,8 @@ const LoginPage: FC<Props> = () => {
   }
 
   const introDiv = (
-    <div style={{ marginBottom: '10%' }}>
-      <h1>Scan & Go</h1>
+    <div style={{ marginBottom: '10%', textAlign:'center' }}>
+      <h1 style={{}}>Scan & Go</h1>
       <Typography>
         A smart mobile payment system for clothing stores.
         Make every customer’s smartphone a cashier.
@@ -123,7 +123,7 @@ const LoginPage: FC<Props> = () => {
         </div>
         <br />
           <FormControlLabel control={<Checkbox onChange={handleCheckboxChange} value={isRememberMe}  />} label={isRememberMe? 'Remembered':'Remember me'} />
-          <LoadingButton  type='submit' loading={isLoading} loadingPosition="start" startIcon={<LoginIcon />} variant='contained' sx={{ width: '50%', alignSelf: 'center',backgroundColor: buttonColor}}> <span>{buttonTitle}</span></LoadingButton>
+          <LoadingButton  type='submit' loading={isLoading} loadingPosition="start" startIcon={<LoginIcon />} variant='contained' sx={{ width: '50%', alignSelf: 'center',backgroundColor: buttonColor,color:''}}> <span>{buttonTitle}</span></LoadingButton>
       </Form>
     </Formik>
   )
